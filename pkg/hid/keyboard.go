@@ -253,7 +253,7 @@ func UsbToString(packet capture.USBData) string {
 	modifiers := ""
 	cnt := 0
 	for i, key := range packet.Payload {
-		if i >= 2 {
+		if i >= 2 && int(key) < len(usbUsageCodes) {
 			res += usbUsageCodes[key]
 			if key != 0 {
 				cnt++
