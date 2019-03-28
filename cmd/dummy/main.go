@@ -35,7 +35,7 @@ func main() {
 				}
 				lastString = hid.UsbToString(o)
 				fmt.Print(lastString)
-				if err := inject.InjectHid(hid.UsbPayloadToHid(o.Payload)); err != nil {
+				if err := inject.InjectHid(o.Payload); err != nil {
 					log.Fatal(err)
 				}
 			}

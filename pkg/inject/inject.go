@@ -13,7 +13,7 @@ func OpenHid(id uint64) error {
 	return err
 }
 
-func InjectHid(msg string) error {
-	_, err := fd.WriteString(msg)
+func InjectHid(msg []byte) error {
+	_, err := fd.Write(msg)
 	return err
 }
