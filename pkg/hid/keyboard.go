@@ -1,6 +1,10 @@
 package hid
 
-import "trump/pkg/capture"
+import (
+	"trump/pkg/capture"
+	"fmt"
+	"strings"
+)
 
 var usbUsageCodes = []string{
 	"",
@@ -272,4 +276,12 @@ func UsbToString(packet capture.USBData) string {
 		res = "(" + res + ")"
 	}
 	return res
+}
+
+func UsbPayloadToHid(payload []byte) string {
+	res := ""
+	for _, b := range payload {
+		res += fmt.Sprintf("%hhx ", b)
+	}
+	return strings.Trim(res, " ")
 }

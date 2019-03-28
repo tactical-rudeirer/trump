@@ -7,11 +7,16 @@ import (
 	"github.com/google/gopacket/pcap"
 	"trump/pkg/hid"
 	"github.com/google/gopacket/layers"
+	"trump/pkg/inject"
+	"log"
 )
 
 func main() {
 	s := capture.GetCaptureStream(100)
 	defer capture.RunCapture(0, 1024, false, pcap.BlockForever)()
+	if err := inject.OpenHid(0); err != nil {
+		log.Fatal(err)
+	}
 	go func() {
 		lastString := ""
 		lastTime := time.Duration(-1)
@@ -30,6 +35,9 @@ func main() {
 				}
 				lastString = hid.UsbToString(o)
 				fmt.Print(lastString)
+				if err := inject.InjectHid(hid.UsbPayloadToHid(o.Payload)); err != nil {
+					log.Fatal(err)
+				}
 			}
 		}
 	}()
