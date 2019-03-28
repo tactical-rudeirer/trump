@@ -14,10 +14,10 @@ import (
 func main() {
 	s := capture.GetCaptureStream(100)
 	defer capture.RunCapture(0, 1024, false, pcap.BlockForever)()
-	if err := inject.OpenHid(0); err != nil {
-		log.Fatal(err)
-	}
 	go func() {
+		if err := inject.OpenHid(0); err != nil {
+			log.Fatal(err)
+		}
 		lastString := ""
 		lastTime := time.Duration(-1)
 		diff := time.Duration(-1)
