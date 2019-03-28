@@ -9,7 +9,7 @@ var fd *os.File
 
 func OpenHid(id uint64) error {
 	var err error
-	fd, err = os.Open(fmt.Sprintf("/dev/hidg%d", id))
+	fd, err = os.OpenFile(fmt.Sprintf("/dev/hidg%d", id), os.O_WRONLY, 0)
 	return err
 }
 
