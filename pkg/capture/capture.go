@@ -1,7 +1,6 @@
 package capture
 
-import
-(
+import (
 	"fmt"
 	"time"
 	"github.com/google/gopacket/pcap"
@@ -20,13 +19,12 @@ func GetCaptureStream(buffer uint64) chan USBData {
 	return c
 }
 
-func RunCapture(busID uint64, maxSize uint64, promisc bool, timeout time.Duration) {
+func RunCapture(busID uint64, maxSize uint64, promisc bool, timeout time.Duration) func() {
 	var handle *pcap.Handle
 	inactive, err := pcap.NewInactiveHandle(fmt.Sprintf("usbmon%d", busID))
 	if err != nil {
 		log.Fatalf("could not create: %v", err)
 	}
-	defer inactive.CleanUp()
 	if err = inactive.SetSnapLen(int(maxSize)); err != nil {
 		log.Fatalf("could not set snap length: %v", err)
 	} else if err = inactive.SetPromisc(promisc); err != nil {
@@ -37,12 +35,17 @@ func RunCapture(busID uint64, maxSize uint64, promisc bool, timeout time.Duratio
 	if handle, err = inactive.Activate(); err != nil {
 		log.Fatal("PCAP Activate error: ", err)
 	}
-	defer handle.Close()
 	src := gopacket.NewPacketSource(handle, gopacket.DecodersByLayerName["USB"])
-	for p := range src.Packets() {
-		usbLayer := p.Layer(layers.LayerTypeUSB).(*layers.USB)
-		for _, s := range streams {
-			s <- USBData(usbLayer)
+	go func() {
+		for p := range src.Packets() {
+			usbLayer := p.Layer(layers.LayerTypeUSB).(*layers.USB)
+			for _, s := range streams {
+				s <- USBData(usbLayer)
+			}
 		}
+	}()
+	return func() {
+		handle.Close()
+		inactive.CleanUp()
 	}
 }
