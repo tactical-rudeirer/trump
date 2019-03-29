@@ -22,7 +22,9 @@ func RunInjector(id uint64) func () {
 	go func() {
 		for msg := range inStream {
 			_, err := fd.Write(msg)
-			log.Printf("failed to write to hid device: %v", err)
+			if err != nil {
+				log.Printf("failed to write to hid device: %v", err)
+			}
 		}
 	}()
 	return func() {
