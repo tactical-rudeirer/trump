@@ -2,8 +2,8 @@ package middleware
 
 import (
 	"sort"
-	"trump/pkg/capture"
 	"trump/pkg/inject"
+	"trump/pkg/capture"
 )
 
 type Plugin struct {
@@ -35,10 +35,16 @@ func InitMiddleware() {
 	}
 }
 
-func ProcessMsg(msg capture.USBData) inject.Data {
+func ProcessMsg(msg interface{}, skipTo int) inject.Data {
 	processedMsg := interface{}(msg)
 	for _, p := range sortedPlugins {
+		if p.Priority < skipTo {
+			continue
+		}
 		processedMsg = p.Process(processedMsg)
+	}
+	if processedMsg, ok := processedMsg.(capture.USBData); ok {
+		return processedMsg.Payload
 	}
 	return processedMsg.(inject.Data)
 }

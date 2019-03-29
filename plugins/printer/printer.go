@@ -41,5 +41,5 @@ func ProcessMsg(arg interface{}) interface{} {
 		lastString = hid.UsbToString(msg)
 		fmt.Print(lastString)
 	}
-	return msg
+	return arg
 }

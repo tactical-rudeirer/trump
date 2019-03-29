@@ -7,8 +7,16 @@ import (
 	"trump/pkg/middleware"
 )
 
+type proxyMsg struct {
+	msg interface{}
+	skipTo int
+}
+
+var proxyChan chan proxyMsg
+
 func RunProxy(inID uint64, outID uint64, plugins ...middleware.Plugin) {
 	inS := capture.GetCaptureStream(100)
+	proxyChan = make(chan proxyMsg, 100)
 	outS := inject.GetInjectionStream(100)
 	defer capture.RunCapture(inID, 1024, false, pcap.BlockForever)()
 	defer inject.RunInjector(outID)()
@@ -17,7 +25,16 @@ func RunProxy(inID uint64, outID uint64, plugins ...middleware.Plugin) {
 		middleware.RegisterPlugin(p)
 	}
 	middleware.InitMiddleware()
-	for msg := range inS {
-		outS <- middleware.ProcessMsg(msg)
+	go func() {
+		for msg := range inS {
+			proxyChan <- proxyMsg{msg, -1}
+		}
+	}()
+	for msg := range proxyChan {
+		outS <- middleware.ProcessMsg(msg.msg, msg.skipTo)
 	}
+}
+
+func InjectMsg(msg interface{}, skipTo int) {
+	proxyChan <- proxyMsg{msg, skipTo}
 }
