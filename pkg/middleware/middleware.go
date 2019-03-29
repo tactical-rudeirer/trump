@@ -42,6 +42,9 @@ func ProcessMsg(msg interface{}, skipTo int) inject.Data {
 			continue
 		}
 		processedMsg = p.Process(processedMsg)
+		if processedMsg == nil {
+			return inject.Data{}
+		}
 	}
 	if processedMsg, ok := processedMsg.(capture.USBData); ok {
 		return processedMsg.Payload

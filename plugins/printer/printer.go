@@ -11,7 +11,7 @@ import (
 
 var Plugin = middleware.Plugin{
 	Process: ProcessMsg,
-	Priority: 0,
+	Priority: 5,
 	Init: Init,
 }
 

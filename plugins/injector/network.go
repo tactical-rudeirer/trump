@@ -19,6 +19,7 @@ var Plugin = middleware.Plugin{
 }
 
 func Init() {
+	//TODO: TLS
 	listener, err := net.Listen("tcp", "0.0.0.0:9998")
 	if err != nil {
 		log.Fatalf("failed to start listening for connections: %v", err)

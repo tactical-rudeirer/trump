@@ -7,6 +7,7 @@ import (
 	"os"
 	"log"
 	"github.com/docker/libchan/spdy"
+	"github.com/google/gopacket/layers"
 )
 
 func main() {
@@ -26,6 +27,8 @@ func main() {
 		log.Fatalf("failed to connect: %v", err)
 	}
 	for msg := range inS {
-		s.Send(msg.Payload)
+		if msg.EventType == layers.USBEventTypeComplete {
+			s.Send(msg.Payload)
+		}
 	}
 }
