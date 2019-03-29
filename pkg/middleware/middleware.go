@@ -10,7 +10,9 @@ type Plugin struct {
 	Process  func(interface{}) interface{}
 	Priority int
 	Init     func()
+	Shutdown func()
 }
+
 var sortedPlugins []Plugin
 var plugins map[int]Plugin
 
@@ -22,7 +24,7 @@ func ClearPlugins() {
 	plugins = make(map[int]Plugin)
 }
 
-func InitMiddleware() {
+func InitMiddleware() func() {
 	var keys []int
 	for k := range plugins {
 		keys = append(keys, k)
@@ -32,6 +34,11 @@ func InitMiddleware() {
 	for _, k := range keys {
 		sortedPlugins = append(sortedPlugins, plugins[k])
 		plugins[k].Init()
+	}
+	return func() {
+		for i := len(sortedPlugins)-1; i >= 0; i-- {
+			sortedPlugins[i].Shutdown()
+		}
 	}
 }
 

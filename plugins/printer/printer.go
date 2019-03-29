@@ -13,6 +13,7 @@ var Plugin = middleware.Plugin{
 	Process: ProcessMsg,
 	Priority: 5,
 	Init: Init,
+	Shutdown: func() {},
 }
 
 var lastString = ""

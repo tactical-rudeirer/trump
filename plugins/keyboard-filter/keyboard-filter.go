@@ -10,6 +10,7 @@ var Plugin = middleware.Plugin{
 	Process: ProcessMsg,
 	Priority: 0,
 	Init: Init,
+	Shutdown: func() {},
 }
 
 func Init() {}

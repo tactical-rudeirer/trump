@@ -24,7 +24,7 @@ func RunProxy(inID uint64, outID uint64, plugins ...middleware.Plugin) {
 	for _, p := range plugins {
 		middleware.RegisterPlugin(p)
 	}
-	middleware.InitMiddleware()
+	defer middleware.InitMiddleware()()
 	go func() {
 		for msg := range inS {
 			proxyChan <- proxyMsg{msg, -1}
