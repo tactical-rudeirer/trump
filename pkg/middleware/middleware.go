@@ -3,7 +3,7 @@ package middleware
 import (
 	"sort"
 	"trump/pkg/inject"
-	"trump/pkg/capture"
+	capture "trump/pkg/capture/pcap"
 )
 
 type Plugin struct {

@@ -1,7 +1,7 @@
 package proxy
 
 import (
-	"trump/pkg/capture"
+	capture "trump/pkg/capture/pcap"
 	"trump/pkg/inject"
 	"github.com/google/gopacket/pcap"
 	"trump/pkg/middleware"

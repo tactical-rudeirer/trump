@@ -1,7 +1,7 @@
 package printer
 
 import (
-	"trump/pkg/capture"
+	capture "trump/pkg/capture/pcap"
 	"time"
 	"github.com/google/gopacket/layers"
 	"fmt"

@@ -3,9 +3,9 @@ package main
 import (
 	"trump/pkg/proxy"
 	"trump/plugins/printer"
-	"trump/plugins/keyboard-filter"
+	"trump/plugins/keyboard"
 )
 
 func main() {
-	proxy.RunProxy(0, 0, keyboard_filter.Plugin, printer.Plugin)
+	proxy.RunProxy(0, 0, keyboard.Filter, printer.Plugin)
 }

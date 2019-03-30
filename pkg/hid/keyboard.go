@@ -1,7 +1,7 @@
 package hid
 
 import (
-	"trump/pkg/capture"
+	capture "trump/pkg/capture/pcap"
 )
 
 var usbUsageCodes = []string{

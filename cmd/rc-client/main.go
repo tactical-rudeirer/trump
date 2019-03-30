@@ -1,7 +1,7 @@
 package main
 
 import (
-	"trump/pkg/capture"
+	capture "trump/pkg/capture/pcap"
 	"github.com/google/gopacket/pcap"
 	"log"
 	"github.com/docker/libchan/spdy"
